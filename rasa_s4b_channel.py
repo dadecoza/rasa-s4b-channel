@@ -33,7 +33,8 @@ class Message:
             r = requests.post(
                 self.typing_url,
                 headers={"Authorization": self.authorization},
-                proxies=self.proxy
+                proxies=self.proxy,
+                verify=False
             )
             time.sleep(8)
 
@@ -42,7 +43,7 @@ class Message:
             "Content-Type": "text/plain",
             "Authorization": self.authorization
         }
-        r = requests.post(self.url, data=text, headers=headers, proxies=self.proxy)
+        r = requests.post(self.url, data=text, headers=headers, proxies=self.proxy, verify=False)
         self.replied = True
 
 
@@ -82,7 +83,7 @@ class SkypeForBusinessBot():
         self.url_user = url
 
     def set_oauth_url(self):
-        r = requests.get(self.url_user, proxies=self.proxy)
+        r = requests.get(self.url_user, proxies=self.proxy, verify=False)
         m = re.search('MsRtcOAuth href="(.*?)"', str(r.headers))
         url = m.group(1)
         url = self.fix_url(url)
@@ -102,7 +103,8 @@ class SkypeForBusinessBot():
                 "Content-Type":
                     "application/x-www-form-urlencoded;charset=UTF-8"
             },
-            proxies=self.proxy
+            proxies=self.proxy,
+            verify=False
         )
         j = r.json()
         auth_header = "%s %s" % (j['token_type'], j['access_token'])
@@ -210,7 +212,8 @@ class SkypeForBusinessBot():
             url,
             headers=headers,
             proxies=self.proxy,
-            params=params
+            params=params,
+            verify=False
         )
 
         if r.status_code == 401:
@@ -243,7 +246,8 @@ class SkypeForBusinessBot():
             url,
             headers=headers,
             proxies=self.proxy,
-            json=data
+            json=data,
+            verify=False
         )
 
         if r.status_code == 401:
@@ -307,7 +311,8 @@ def message_received(message):
                 "sender": uri,
                 "message": text
             },
-            params=params
+            params=params,
+            verify=False
         )
         j = r.json()
         out = []
